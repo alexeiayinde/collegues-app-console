@@ -2,9 +2,8 @@ var request = require('request');
 
 function rechercherCollegueParNom(nomRecherche, callback) {
 
-    request('https://aa-collegues-api.herokuapp.com/collegues?nom='+nomRecherche, {json:true}, function(err, res, body) {
+    request('https://aa-collegues-api.herokuapp.com/collegues?nom=' + nomRecherche, {json:true}, function(err, res, body) {
         var tableauColleguesTrouves = body;
-
         callback(tableauColleguesTrouves);
     });
 }
@@ -17,5 +16,11 @@ function rechercherCollegueParMatricule(matricule, callback) {
     });
 }
 
+function creerCollegue(collegue) {
+
+    request.post('https://aa-collegues-api.herokuapp.com/collegues', {json:true, body: collegue});
+}
+
 exports.rechercherCollegueParNom = rechercherCollegueParNom;
 exports.rechercherCollegueParMatricule = rechercherCollegueParMatricule;
+exports.creerCollegue = creerCollegue;
