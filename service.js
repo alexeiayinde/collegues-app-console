@@ -19,11 +19,20 @@ function creerCollegue(collegue) {
 }
 
 function modifierEmail(collegue) {
-    request.patch('https://aa-collegues-api.herokuapp.com/collegues/' + collegue.matricule, {json:true, body:collegue});
+    request.patch('https://aa-collegues-api.herokuapp.com/collegues/' + collegue.matricule, {json:true, body:collegue}, function(err, res, body) {
+        
+    });
 }
 
 function modifierPhoto(collegue) {
     request.patch('https://aa-collegues-api.herokuapp.com/collegues/' + collegue.matricule, {json:true, body:collegue});
+}
+
+function listerCollegues(callback) {
+    request('https://aa-collegues-api.herokuapp.com/collegues/lister', {json:true}, function(err, res, body) {
+        var tableauCollegues = body;
+        callback(tableauCollegues);
+    });
 }
 
 exports.rechercherCollegueParNom = rechercherCollegueParNom;
@@ -31,3 +40,4 @@ exports.rechercherCollegueParMatricule = rechercherCollegueParMatricule;
 exports.creerCollegue = creerCollegue;
 exports.modifierEmail = modifierEmail;
 exports.modifierPhoto = modifierPhoto;
+exports.listerCollegues = listerCollegues;

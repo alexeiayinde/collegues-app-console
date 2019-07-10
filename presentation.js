@@ -7,7 +7,7 @@ var rl = readline.createInterface({
 });
 
 function afficherMenu() {
-    return '1. Rechercher un collège par nom AYINDE\n' + '2. Créer un collègue\n' + '3. Modifier l\'email\n' + '4. Modifier photo\n' + '99. Sortir\n';
+    return '1. Rechercher un collège par nom\n' + '2. Créer un collègue\n' + '3. Modifier l\'email d\'un collègue\n' + '4. Modifier la photo d\'un collègue\n' + '5. Lister collègues\n' + '99. Sortir\n';
 }
 
 function start() { 
@@ -25,6 +25,9 @@ function start() {
                 break;
             case '4' :
                 modifierPhoto();
+                break;
+            case '5' :
+                listerCollegues();
                 break;
             case '99' :
                 console.log('\nAu revoir');
@@ -108,6 +111,17 @@ function modifierPhoto() {
                 start();
             });
         });
+    });
+}
+
+function listerCollegues() {
+    console.log('>> Recherche des collègues en cours...\n');
+    moduleService.listerCollegues(function(colleguesTrouves) {
+        colleguesTrouves.forEach(function(collegue) {
+            console.log(collegue);
+        });
+        console.log('');
+        start();
     });
 }
 
