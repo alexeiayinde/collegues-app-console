@@ -22,7 +22,12 @@ function modifierEmail(collegue) {
     request.patch('https://aa-collegues-api.herokuapp.com/collegues/' + collegue.matricule, {json:true, body:collegue});
 }
 
+function modifierPhoto(collegue) {
+    request.patch('https://aa-collegues-api.herokuapp.com/collegues/' + collegue.matricule, {json:true, body:collegue});
+}
+
 exports.rechercherCollegueParNom = rechercherCollegueParNom;
 exports.rechercherCollegueParMatricule = rechercherCollegueParMatricule;
 exports.creerCollegue = creerCollegue;
 exports.modifierEmail = modifierEmail;
+exports.modifierPhoto = modifierPhoto;

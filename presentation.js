@@ -7,7 +7,7 @@ var rl = readline.createInterface({
 });
 
 function afficherMenu() {
-    return '1. Rechercher un collège par nom AYINDE\n' + '2. Créer un collègue\n' + '3. Modifier l\'email\n' + '99. Sortir\n';
+    return '1. Rechercher un collège par nom AYINDE\n' + '2. Créer un collègue\n' + '3. Modifier l\'email\n' + '4. Modifier photo\n' + '99. Sortir\n';
 }
 
 function start() { 
@@ -22,6 +22,9 @@ function start() {
                 break;
             case '3' :
                 modifierEmail();
+                break;
+            case '4' :
+                modifierPhoto();
                 break;
             case '99' :
                 console.log('\nAu revoir');
@@ -91,6 +94,21 @@ function modifierEmail() {
             });
         });
     })
+}
+
+function modifierPhoto() {
+    var collegue = {};
+    rl.question('>> Saisissez le matricule du collègue : ', function(matricule) {
+        collegue.matricule = matricule;
+        rl.question('>> Saisissez le nouveau URL de la photo du collègue : ', function(photoUrl) {
+            collegue.photoUrl = photoUrl;
+            moduleService.modifierPhoto(collegue);
+            moduleService.rechercherCollegueParMatricule(matricule, function(collegueTrouve) {
+                console.log('\n' + collegueTrouve.nom, collegueTrouve.prenoms, '\nNouvel URL de photo :', collegue.photoUrl + '\n');
+                start();
+            });
+        });
+    });
 }
 
 exports.start = start;
