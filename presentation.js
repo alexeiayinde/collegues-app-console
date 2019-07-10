@@ -21,6 +21,7 @@ function start() {
                 creerCollegue();
                 break;
             case '3' :
+                modifierEmail();
                 break;
             case '99' :
                 console.log('\nAu revoir');
@@ -74,12 +75,22 @@ function creerCollegue() {
                 });
             });
         });
-    });
-    
-    
-    
-    
-    
+    }); 
+}
+
+function modifierEmail() {
+    var collegue = {};
+    rl.question('>> Saisissez le matricule du collègue : ', function(matricule) {
+        collegue.matricule = matricule;
+        rl.question('>> Saisissez le nouveau e-mail du collègue : ', function(email) {
+            collegue.email = email;
+            moduleService.modifierEmail(collegue);
+            moduleService.rechercherCollegueParMatricule(matricule, function(collegueTrouve) {
+                console.log('\n' + collegueTrouve.nom, collegueTrouve.prenoms, '\nNouveau email :', collegue.email + '\n');
+                start();
+            });
+        });
+    })
 }
 
 exports.start = start;
