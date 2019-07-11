@@ -1,5 +1,7 @@
 const readline = require('readline');
-const moduleService = require('./service.js');
+const Service = require('./service.js');
+
+const moduleService = new Service();
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -20,7 +22,7 @@ function start() {
     rl.question(afficherMenu() + '\nVotre choix = ', (saisie) =>{
         switch (saisie) {
             case '1' : 
-                rechercheCollegues();
+                rechercherCollegues();
                 break;
             case '2' : 
                 creerCollegue();
@@ -45,7 +47,7 @@ function start() {
     })           
 }
 
-function rechercheCollegues() {
+function rechercherCollegues() {
     rl.question('>> Recherche en cours du nom ', (nomRecherche) =>{
         console.log('');
 
@@ -58,28 +60,7 @@ function rechercheCollegues() {
     });
 }
 
-//function rechercheCollegues1() {
- //   rl.question('>> Recherche en cours du nom ', (nomRecherche) =>{
- //       console.log('');
- //       let j = 0;
- //       let longCollegues;
- //       moduleService.rechercherCollegueParNom(nomRecherche, (colleguesTrouves) => {
- //           longCollegues = colleguesTrouves.length;
- //           colleguesTrouves.forEach((collegue) =>{
- //               moduleService.rechercherCollegueParMatricule(collegue, (collegueTrouve) =>{
- //                   console.log(collegueTrouve.nom + ' ' + collegueTrouve.prenoms + ' (' + collegueTrouve.dateDeNaissance + ')');        
-  //                  j++;
-    //                if (j == longCollegues) {
-      //                  console.log('');
-        //                start();
-          //          }
-//                });      
-  //          });            
-    //    });
- //   })
-//}
-
-function creerCollegue1() {
+function creerCollegue() {
     let collegue = {};
     rl.question('>> Saisissez le nom du collègue : ', function(saisie) {
         collegue.nom = saisie;
@@ -104,32 +85,47 @@ function creerCollegue1() {
 
 function modifierEmail() {
     let collegue = {};
-    rl.question('>> Saisissez le matricule du collègue : ', (matricule) => {
-        collegue.matricule = matricule;
-        rl.question('>> Saisissez le nouveau e-mail du collègue : ', (email) => {
-            collegue.email = email;
-            moduleService.modifierEmail(collegue);
-            moduleService.rechercherCollegueParMatricule(matricule, (collegueTrouve) => {
-                console.log('\n' + collegueTrouve.nom, collegueTrouve.prenoms, '\nNouveau email :', collegue.email + '\n');
-                start();
-            });
-        });
-    })
+    moduleService.listerCollegues()
+        .then((colleguesTrouves) => {
+            colleguesTrouves.forEach((collegue) => {
+                console.log(collegue.nom, collegue.prenoms + ' (' + collegue.email + ')\n\tMatricule = ' + collegue.matricule + '\n');
+            })
+            rl.question('>> Saisissez le matricule du collègue à mettre-à-jour : ', (matricule) => {
+                collegue.matricule = matricule;
+                rl.question('>> Saisissez le nouveau e-mail du collègue : ', (email) => {
+                    collegue.email = email;
+                    moduleService.modifierEmail(collegue);
+                    moduleService.rechercherCollegueParMatricule(matricule)
+                    .then ((collegueTrouve) => {
+                        console.log('\n' + collegueTrouve.nom, collegueTrouve.prenoms, '\nNouveau email :', collegue.email + '\n');
+                        start();
+                    });
+                });
+            })
+        })        
 }
 
 function modifierPhoto() {
     let collegue = {};
-    rl.question('>> Saisissez le matricule du collègue : ', (matricule) => {
-        collegue.matricule = matricule;
-        rl.question('>> Saisissez le nouveau URL de la photo du collègue : ', (photoUrl) => {
-            collegue.photoUrl = photoUrl;
-            moduleService.modifierPhoto(collegue);
-            moduleService.rechercherCollegueParMatricule(matricule, (collegueTrouve) => {
-                console.log('\n' + collegueTrouve.nom, collegueTrouve.prenoms, '\nNouvel URL de photo :', collegue.photoUrl + '\n');
-                start();
+    moduleService.listerCollegues()
+        .then((colleguesTrouves) => {
+            colleguesTrouves.forEach((collegue) => {
+                console.log(collegue.nom, collegue.prenoms + ' (' + collegue.photoUrl + ')\n\tMatricule = ' + collegue.matricule + '\n');
+            })
+            rl.question('>> Saisissez le matricule du collègue : ', (matricule) => {
+                collegue.matricule = matricule;
+                rl.question('>> Saisissez le nouveau URL de la photo du collègue : ', (photoUrl) => {
+                    collegue.photoUrl = photoUrl;
+                    moduleService.modifierPhoto(collegue);
+                    moduleService.rechercherCollegueParMatricule(matricule) 
+                    .then ((collegueTrouve) => {
+                        console.log('\n' + collegueTrouve.nom, collegueTrouve.prenoms, '\nNouvel URL de photo :', collegue.photoUrl + '\n');
+                        start();
+                    });
+                });
             });
-        });
-    });
+        })
+        .catch((error) => console.log(error)); 
 }
 
 function listerCollegues() {
@@ -141,6 +137,28 @@ function listerCollegues() {
         })
         .catch((error) => console.log(error))
 }
+
+
+//function rechercheCollegues1() {
+ //   rl.question('>> Recherche en cours du nom ', (nomRecherche) =>{
+ //       console.log('');
+ //       let j = 0;
+ //       let longCollegues;
+ //       moduleService.rechercherCollegueParNom(nomRecherche, (colleguesTrouves) => {
+ //           longCollegues = colleguesTrouves.length;
+ //           colleguesTrouves.forEach((collegue) =>{
+ //               moduleService.rechercherCollegueParMatricule(collegue, (collegueTrouve) =>{
+ //                   console.log(collegueTrouve.nom + ' ' + collegueTrouve.prenoms + ' (' + collegueTrouve.dateDeNaissance + ')');        
+  //                  j++;
+    //                if (j == longCollegues) {
+      //                  console.log('');
+        //                start();
+          //          }
+//                });      
+  //          });            
+    //    });
+ //   })
+//}
 
 //function listerCollegues2() {
  //   console.log('>> Recherche des collègues en cours...\n');
