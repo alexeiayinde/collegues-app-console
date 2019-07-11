@@ -18,7 +18,7 @@ var Service = /** @class */ (function () {
         });
     };
     Service.prototype.rechercherCollegueParMatricule = function (matricule) {
-        return request_promise_native_1.default('https://aa-collegues-api.herokuapp.com/collegues/' + matricule, { json: true }, function (err, res, body) { });
+        return request_promise_native_1.default('https://aa-collegues-api.herokuapp.com/collegues/' + matricule, { json: true }, function (err, res, body) { }).promise();
     };
     Service.prototype.creerCollegue = function (collegue) {
         return request_promise_native_1.default.post('https://aa-collegues-api.herokuapp.com/collegues', { json: true, body: {

@@ -3,7 +3,7 @@ import request from 'request-promise-native';
 import Collegue from './domains';
 
 export default class Service {
-    rechercherCollegueParNom(nomRecherche:string) {
+    rechercherCollegueParNom(nomRecherche:string):Promise<Collegue[]> {
         return request('https://aa-collegues-api.herokuapp.com/collegues?nom=' + nomRecherche, {json:true}, (err, res, body) => {
         })
         .then((listeMatricules:string[]) => {
@@ -13,8 +13,8 @@ export default class Service {
         });
     }
 
-    rechercherCollegueParMatricule(matricule:string) {
-        return request('https://aa-collegues-api.herokuapp.com/collegues/' + matricule, {json:true}, (err, res, body) => {})
+    rechercherCollegueParMatricule(matricule:string): Promise<any> {
+        return request('https://aa-collegues-api.herokuapp.com/collegues/' + matricule, {json:true}, (err, res, body) => {}).promise();
     }
 
     creerCollegue(collegue:Collegue) {
