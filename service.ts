@@ -1,6 +1,8 @@
 import jsdom from 'jsdom';
-import request from 'request-promise-native';
+import baserequest from 'request-promise-native';
 import Collegue from './domains';
+
+const request = baserequest.defaults({ jar:true});
 
 export default class Service {
     rechercherCollegueParNom(nomRecherche:string):Promise<Collegue[]> {
@@ -42,6 +44,13 @@ export default class Service {
     listerCollegues() {
         return request('https://aa-collegues-api.herokuapp.com/collegues/lister', {json:true}, (err, res, body) => {
         });
+    }
+
+    authentifier(nomUtilisateur:string, motDePasse:string) {
+        return request.post('https://aa-collegues-api.herokuapp.com/collegues/auth', {json:true, body:{
+            "nomUtilisateur":nomUtilisateur,
+            "motDePasse":motDePasse
+        }});
     }
 }
 

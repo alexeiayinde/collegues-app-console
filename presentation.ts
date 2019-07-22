@@ -19,8 +19,7 @@ function afficherMenu() {
 99. Sortir\n`;
  }
 
-function start() { 
-       
+ function lancerMenu() {
     rl.question(afficherMenu() + '\nVotre choix = ', (saisie) =>{
         switch (saisie) {
             case '1' : 
@@ -43,10 +42,14 @@ function start() {
                 rl.close();
                 break;
             default : 
-                start();
+                lancerMenu();
                 break;
         }
     })           
+ }
+
+function start() { 
+    authentifier();
 }
 
 function rechercherCollegues() {
@@ -56,7 +59,7 @@ function rechercherCollegues() {
         moduleService.rechercherCollegueParNom(nomRecherche)
             .then((colleguesTrouves) => {
                 colleguesTrouves.forEach((collegue:Collegue) => console.log(collegue.nom + ' ' + collegue.prenoms + ' (' + collegue.dateDeNaissance + ')'));
-                start();  
+                lancerMenu();  
             })
             .catch((err) => console.log(err));           
     });
@@ -78,7 +81,7 @@ function creerCollegue() {
                         .then((body) => {
                             console.log('');
                             console.log(body);
-                            start();})
+                            lancerMenu();})
                         .catch((err) => {console.log("Impossible de créer le collègue!")});                        
                     })
                 });
@@ -102,7 +105,7 @@ function modifierEmail() {
                     .then((body) => {
                         console.log('');
                         console.log(body);
-                        start();
+                        lancerMenu();
                     })
                     .catch((err) => {console.log(err)});
                 });
@@ -125,7 +128,7 @@ function modifierPhoto() {
                     .then((body) => {
                         console.log('');
                         console.log(body);                   
-                        start();
+                        lancerMenu();
                     })
                     .catch((err) => {console.log(err)});
                 });
@@ -139,9 +142,26 @@ function listerCollegues() {
     moduleService.listerCollegues() 
         .then((colleguesTrouves) => {
             colleguesTrouves.forEach((collegue:Collegue) => console.log(collegue));
-            start();
+            lancerMenu();
         })
         .catch((error) => console.log(error))
+}
+
+function authentifier() {
+    rl.question('>> Veuillez saisir votre nom d\'utilisateur : ', (nomUtilisateur:string) =>{
+        rl.question('>> Veuillez saisir votre mot de passe : ', (motDePasse:string) => {
+            moduleService.authentifier(nomUtilisateur, motDePasse)
+            .then(() => {
+                console.log('');
+                console.log('Authentification réussie !');
+                lancerMenu();
+            })
+            .catch((err) => {
+                console.log('Le nom d\'utilisateur/mot de passe saisi est invalide, veuillez recommencer.');
+                authentifier();
+            });
+        });       
+    });
 }
 
 export {start};
