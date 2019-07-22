@@ -141,7 +141,7 @@ function listerCollegues() {
     console.log('>> Recherche des collègues en cours...\n');
     moduleService.listerCollegues() 
         .then((colleguesTrouves) => {
-            colleguesTrouves.forEach((collegue:Collegue) => console.log(collegue));
+            colleguesTrouves.forEach((collegue:Collegue) => console.log(collegue.nom + ' ' + collegue.prenoms + ' (' + collegue.dateDeNaissance + ')'));
             lancerMenu();
         })
         .catch((error) => console.log(error))
